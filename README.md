@@ -6,7 +6,7 @@ Projeto pessoal de contagem de pessoas em tempo real usando **Raspberry Pi 4** c
 
 ---
 
-#Integração rápida com o FIWARE Descomplicado
+# Integração rápida com o FIWARE Descomplicado
 
 Este projeto foi pensado para funcionar de ponta a ponta com a stack do FIWARE Descomplicado, que oferece orquestração simplificada (Orion, IoT Agent Ultralight, etc.) para testes, PoCs e ensino.
 
