@@ -1,0 +1,385 @@
+{
+  "info": {
+    "name": "Fiware_RaspyVision",
+    "_postman_id": "a9f2b3c6-raspy-vision-collection",
+    "description": "Coleção Postman para provisionar e operar a câmera (Raspberry Pi 4 + RaspiCam) via IoT Agent Ultralight e consultar a entidade no Orion. Nomes e atributos ajustados para 'camera'. Projeto pessoal; Inteligência Artificial foi utilizada para apoiar o desenvolvimento.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Provisionamento (IoT Agent)",
+      "item": [
+        {
+          "name": "Provisionar camera",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{IOTA_HOST}}:{{IOTA_PORT}}/iot/devices",
+              "protocol": "http",
+              "host": [
+                "{{IOTA_HOST}}"
+              ],
+              "port": "{{IOTA_PORT}}",
+              "path": [
+                "iot",
+                "devices"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"devices\": [\n    {\n      \"device_id\": \"{{DEVICE_ID}}\",\n      \"entity_name\": \"urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}\",\n      \"entity_type\": \"Cam\",\n      \"protocol\": \"PDI-IoTA-UltraLight\",\n      \"transport\": \"MQTT\",\n      \"apikey\": \"{{APIKEY}}\",\n      \"commands\": [\n        {\n          \"name\": \"on\",\n          \"type\": \"command\"\n        },\n        {\n          \"name\": \"off\",\n          \"type\": \"command\"\n        }\n      ],\n      \"attributes\": [\n        {\n          \"object_id\": \"s\",\n          \"name\": \"state\",\n          \"type\": \"Text\"\n        },\n        {\n          \"object_id\": \"c\",\n          \"name\": \"count\",\n          \"type\": \"Integer\"\n        }\n      ]\n    }\n  ]\n}"
+            },
+            "description": "Cria o dispositivo de câmera no IoT Agent (Ultralight/MQTT). A entidade Cam será criada/atualizada no Orion."
+          }
+        },
+        {
+          "name": "Listar devices (IoT Agent)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{IOTA_HOST}}:{{IOTA_PORT}}/iot/devices",
+              "protocol": "http",
+              "host": [
+                "{{IOTA_HOST}}"
+              ],
+              "port": "{{IOTA_PORT}}",
+              "path": [
+                "iot",
+                "devices"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Apagar device (IoT Agent)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{IOTA_HOST}}:{{IOTA_PORT}}/iot/devices/{{DEVICE_ID}}",
+              "protocol": "http",
+              "host": [
+                "{{IOTA_HOST}}"
+              ],
+              "port": "{{IOTA_PORT}}",
+              "path": [
+                "iot",
+                "devices",
+                "{{DEVICE_ID}}"
+              ]
+            },
+            "description": "Remove o device e, opcionalmente, a entidade associada dependendo da config do IoT Agent."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Orion (NGSIv2)",
+      "item": [
+        {
+          "name": "Obter entidade Cam",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ORION_HOST}}:{{ORION_PORT}}/v2/entities/urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}",
+              "protocol": "http",
+              "host": [
+                "{{ORION_HOST}}"
+              ],
+              "port": "{{ORION_PORT}}",
+              "path": [
+                "v2",
+                "entities",
+                "urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Consultar só atributos (count,state)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ORION_HOST}}:{{ORION_PORT}}/v2/entities/urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}?type=Cam&attrs=count,state",
+              "protocol": "http",
+              "host": [
+                "{{ORION_HOST}}"
+              ],
+              "port": "{{ORION_PORT}}",
+              "path": [
+                "v2",
+                "entities",
+                "urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "Cam"
+                },
+                {
+                  "key": "attrs",
+                  "value": "count,state"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar subscription (mudança de count/state)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ORION_HOST}}:{{ORION_PORT}}/v2/subscriptions",
+              "protocol": "http",
+              "host": [
+                "{{ORION_HOST}}"
+              ],
+              "port": "{{ORION_PORT}}",
+              "path": [
+                "v2",
+                "subscriptions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Notificar quando count/state mudarem\",\n  \"subject\": {\n    \"entities\": [\n      {\n        \"id\": \"urn:ngsi-ld:Cam:{{DEVICE_SUFFIX}}\",\n        \"type\": \"Cam\"\n      }\n    ],\n    \"condition\": {\n      \"attrs\": [\n        \"count\",\n        \"state\"\n      ]\n    }\n  },\n  \"notification\": {\n    \"http\": {\n      \"url\": \"{{NOTIFY_URL}}\"\n    },\n    \"attrs\": [\n      \"count\",\n      \"state\"\n    ]\n  },\n  \"throttling\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ORION_HOST}}:{{ORION_PORT}}/v2/subscriptions",
+              "protocol": "http",
+              "host": [
+                "{{ORION_HOST}}"
+              ],
+              "port": "{{ORION_PORT}}",
+              "path": [
+                "v2",
+                "subscriptions"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Testes (HTTP Ultralight opcional)",
+      "item": [
+        {
+          "name": "Enviar medida via HTTP (opcional)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              },
+              {
+                "key": "fiware-service",
+                "value": "{{FIWARE_SERVICE}}"
+              },
+              {
+                "key": "fiware-servicepath",
+                "value": "{{FIWARE_SERVICE_PATH}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{IOTA_HOST}}:{{IOTA_UL_HTTP_PORT}}/iot/d?k={{APIKEY}}&i={{DEVICE_ID}}",
+              "protocol": "http",
+              "host": [
+                "{{IOTA_HOST}}"
+              ],
+              "port": "{{IOTA_UL_HTTP_PORT}}",
+              "path": [
+                "iot",
+                "d"
+              ],
+              "query": [
+                {
+                  "key": "k",
+                  "value": "{{APIKEY}}"
+                },
+                {
+                  "key": "i",
+                  "value": "{{DEVICE_ID}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "s|detected|c|2"
+            },
+            "description": "Embora o projeto use MQTT, este request permite simular uma atualização via HTTP Ultralight."
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Health",
+      "item": [
+        {
+          "name": "Health IoT Agent",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://{{IOTA_HOST}}:{{IOTA_PORT}}/iot/about",
+              "protocol": "http",
+              "host": [
+                "{{IOTA_HOST}}"
+              ],
+              "port": "{{IOTA_PORT}}",
+              "path": [
+                "iot",
+                "about"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Health Orion",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://{{ORION_HOST}}:{{ORION_PORT}}/version",
+              "protocol": "http",
+              "host": [
+                "{{ORION_HOST}}"
+              ],
+              "port": "{{ORION_PORT}}",
+              "path": [
+                "version"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "IOTA_HOST",
+      "value": "localhost"
+    },
+    {
+      "key": "IOTA_PORT",
+      "value": "4041"
+    },
+    {
+      "key": "IOTA_UL_HTTP_PORT",
+      "value": "7896"
+    },
+    {
+      "key": "ORION_HOST",
+      "value": "localhost"
+    },
+    {
+      "key": "ORION_PORT",
+      "value": "1026"
+    },
+    {
+      "key": "FIWARE_SERVICE",
+      "value": "smart"
+    },
+    {
+      "key": "FIWARE_SERVICE_PATH",
+      "value": "/"
+    },
+    {
+      "key": "APIKEY",
+      "value": "TEF"
+    },
+    {
+      "key": "DEVICE_ID",
+      "value": "cam002"
+    },
+    {
+      "key": "DEVICE_SUFFIX",
+      "value": "002"
+    },
+    {
+      "key": "NOTIFY_URL",
+      "value": "http://localhost:9001/notify"
+    }
+  ]
+}
