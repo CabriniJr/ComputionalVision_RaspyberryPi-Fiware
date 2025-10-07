@@ -6,6 +6,33 @@ Projeto pessoal de contagem de pessoas em tempo real usando **Raspberry Pi 4** c
 
 ---
 
+#Integração rápida com o FIWARE Descomplicado
+
+Este projeto foi pensado para funcionar de ponta a ponta com a stack do FIWARE Descomplicado, que oferece orquestração simplificada (Orion, IoT Agent Ultralight, etc.) para testes, PoCs e ensino.
+
+Repositório: FIWARE Descomplicado — (https://github.com/fabiocabrini/fiware)
+
+Público-alvo: estudantes, pesquisadores e desenvolvedores que precisam subir o FIWARE de forma prática para integrar sensores/câmeras e construir provas de conceito com Ultralight/MQTT.
+
+Passos recomendados
+
+Suba o FIWARE Descomplicado conforme o README do repositório acima (IoT Agent + Orion).
+
+Ajuste as variáveis do seu app para apontar ao ambiente FIWARE:
+
+FIWARE_SERVICE, FIWARE_SERVICE_PATH
+
+IOTA_HOST, IOTA_PORT, IOTA_UL_HTTP_PORT
+
+ORION_HOST, ORION_PORT
+
+APIKEY, DEVICE_ID
+
+Provisione a câmera no IoT Agent (Ultralight) e consuma a entidade Cam no Orion.
+Uma Collection Postman de exemplo acompanha este projeto.
+
+>Crédito e agradecimento: este projeto utiliza referências e boas práticas do FIWARE Descomplicado, iniciativa do Prof. Dr. Fábio Henrique Cabrini. Caso este material lhe ajude, considere citar e bonificar o trabalho do professor (estrela no repositório, menção em publicações, citações acadêmicas e links), fortalecendo o ecossistema educacional e de pesquisa em FIWARE no Brasil.
+
 ## Sumário
 
 - [Arquitetura](#arquitetura)
